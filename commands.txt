@@ -1,0 +1,86 @@
+1. git clone https://github.com/SergiiPiatakov/calculator
+
+2. git rebase -i HEAD~2
+
+   // FIX calculator.cpp
+   git add calculator.cpp
+   git rebase --continue
+
+   // FIX calculator.cpp
+   git add calculator.cpp
+   git rebase --continue
+
+   git log --oneline
+      / cf8965a (HEAD -> master) formatting: use tabs instead of spaces \
+      | 28bc22f fix truncation error                                    |
+      | 669f632 improve calculation accuracy                            |
+      | 976f691 add a subtraction operation                             |
+      | f03784b add header guard                                        |
+      | 9972170 basic implementation                                    |
+      \ 75c0e7c Initial commit                                          /
+
+3. git format-patch -1 28bc22f --stdout > truncation_commit.patch
+   git format-patch -1 cf8965a --stdout > formatting_commit.patch
+
+4. git rebase -i HEAD~3
+
+   / pick 669f632 improve calculation accuracy           \
+   | squash 28bc22f fix truncation error                 |
+   \ pick cf8965a formatting: use tabs instead of spaces /
+
+   git log --oneline
+      / 60364cb (HEAD -> master) formatting: use tabs instead of spaces \
+      | 2f23432 improve calculation accuracy && fix truncation error    |
+      | 976f691 add a subtraction operation                             |
+      | f03784b add header guard                                        |
+      | 9972170 basic implementation                                    |
+      \ 75c0e7c Initial commit                                          /
+
+5. git rebase -i HEAD~2
+
+   | pick 2f23432 improve calculation accuracy && fix truncation error |
+
+   git log --oneline
+      / 2f23432 (HEAD -> master) improve calculation accuracy && fix truncation error \
+      | 976f691 add a subtraction operation                                           |
+      | f03784b add header guard                                                      |
+      | 9972170 basic implementation                                                  |
+      \ 75c0e7c Initial commit                                                        /
+
+
+------------------------------------------------------------------------
+
+1. git remote rename origin github
+
+2. git remote add gitlab https://gitlab.com/SergiiPiatakov/calculator.git
+
+3. git remote -v
+   / github  https://github.com/SergiiPiatakov/calculator (fetch)     \
+   | github  https://github.com/SergiiPiatakov/calculator (push)      |
+   | gitlab  https://gitlab.com/SergiiPiatakov/calculator.git (fetch) |
+   \ gitlab  https://gitlab.com/SergiiPiatakov/calculator.git (push)  /
+
+4. git fetch gitlab
+
+5. git log gitlab/master --oneline
+   / d61d32d (gitlab/master) mark member-function as `static` \
+   | e0ea21b add a multiplication operation                   |
+   | 9972170 basic implementation                             |
+   \ 75c0e7c Initial commit                                   /
+
+
+6. git cherry-pick "e0ea21b"
+
+   // Added changes to calculator.cpp and fixed calculator.h
+   git add calculator.cpp
+   git add calculator.h
+
+   git cherry-pick —continue
+
+   git log --oneline
+      / aa54f44 (HEAD -> master) add a multiplication operation      \
+      | 2f23432 improve calculation accuracy && fix truncation error |
+      | 976f691 add a subtraction operation                          |
+      | f03784b add header guard                                     |
+      | 9972170 basic implementation                                 |
+      \ 75c0e7c Initial commit                                       /
